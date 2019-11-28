@@ -1,7 +1,18 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(okvis_ros)
 
+# require opencv_catkin
+find_package(opencv3_catkin REQUIRED)
+if(opencv3_catkin_FOUND)
+  message(STATUS "Found opencv3_catkin!")
+  set(OPENCV_PACKAGE "opencv3_catkin")
+else()
+  message(WARNING "Use the systems opencv installation!")
+  set(OPENCV_PACKAGE "")
+endif()
+
 find_package(catkin REQUIRED
+  ${OPENCV_PACKAGE}
   cv_bridge
   dynamic_reconfigure
   eigen_conversions
@@ -19,7 +30,7 @@ generate_dynamic_reconfigure_options(cfg/Camera.cfg)
 
 catkin_package(
     DEPENDS
-    CATKIN_DEPENDS
+    CATKIN_DEPENDS ${OPENCV_PACKAGE}
     INCLUDE_DIRS include
     LIBRARIES ${PROJECT_NAME}
 )
